@@ -33,6 +33,22 @@ jobs:
             googletest: system
           - os: windows-latest
             googletest: system
+          include:
+          - os: windows-11-arm
+            cxx_standard: 11
+            build: static
+            googletest: build
+            generator: "Default Generator"
+          - os: windows-11-arm
+            cxx_standard: 17
+            build: static
+            googletest: build
+            generator: "Default Generator"
+          - os: windows-11-arm
+            cxx_standard: 20
+            build: static
+            googletest: build
+            generator: "Default Generator"
       env:
         YAML_BUILD_SHARED_LIBS: ${{ matrix.build == 'shared' && 'ON' || 'OFF' }}
         YAML_USE_SYSTEM_GTEST: ${{ matrix.googletest == 'system' && 'ON' || 'OFF' }}
@@ -40,7 +56,7 @@ jobs:
           ${{format(matrix.generator != 'Default Generator' && '-G "{0}"' || '', matrix.generator)}}
         CMAKE_INSTALL_PREFIX: "${{ github.workspace }}/install-prefix"
         CMAKE_BUILD_TYPE: Debug
-        CMAKE_CXX_FLAGS_DEBUG: ${{ matrix.googletest == 'build' && '-g -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC' || '-g' }} 
+        CMAKE_CXX_FLAGS_DEBUG: ${{ matrix.googletest == 'build' && '-g -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC' || '-g' }}
       runs-on: ${{ matrix.os }}
       steps:
 
@@ -105,7 +121,7 @@ jobs:
   bazel-build:
       strategy:
         matrix:
-          os: [ubuntu-latest, windows-latest, macos-latest]
+          os: [ubuntu-latest, windows-latest, macos-latest, windows-11-arm]
       runs-on: ${{ matrix.os }}
       steps:
         - uses: actions/checkout@v6.0.2
@@ -123,7 +139,7 @@ jobs:
   bzlmod-build:
       strategy:
         matrix:
-          os: [ubuntu-latest, windows-latest, macos-latest]
+          os: [ubuntu-latest, windows-latest, macos-latest, windows-11-arm]
       runs-on: ${{ matrix.os }}
       steps:
         - uses: actions/checkout@v6.0.2
